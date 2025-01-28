@@ -38,6 +38,7 @@ type nodeResourceModel struct {
 	UUID               types.String `tfsdk:"uuid"`
 	Name               types.String `tfsdk:"name"`
 	Description        types.String `tfsdk:"description"`
+	ContainerText      types.String `tfsdk:"container_text"`
 	Public             types.Bool   `tfsdk:"public"`
 	BehindProxy        types.Bool   `tfsdk:"behind_proxy"`
 	MaintenanceMode    types.Bool   `tfsdk:"maintenance_mode"`
@@ -51,6 +52,7 @@ type nodeResourceModel struct {
 	UploadSize         types.Int32  `tfsdk:"upload_size"`
 	DaemonSFTP         types.Int32  `tfsdk:"daemon_sftp"`
 	DaemonListen       types.Int32  `tfsdk:"daemon_listen"`
+	DaemonText         types.String `tfsdk:"daemon_text"`
 	DaemonBase         types.String `tfsdk:"daemon_base"`
 	CreatedAt          types.String `tfsdk:"created_at"`
 	UpdatedAt          types.String `tfsdk:"updated_at"`
@@ -92,6 +94,10 @@ func (r *nodeResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			},
 			"description": schema.StringAttribute{
 				Description: "The description of the node.",
+				Required:    true,
+			},
+			"container_text": schema.StringAttribute{
+				Description: "The name of the container inside the console.",
 				Required:    true,
 			},
 			"public": schema.BoolAttribute{
@@ -144,6 +150,10 @@ func (r *nodeResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			},
 			"daemon_listen": schema.Int32Attribute{
 				Description: "The daemon listen of the node.",
+				Required:    true,
+			},
+			"daemon_text": schema.StringAttribute{
+				Description: "The name of the daemon inside the console.",
 				Required:    true,
 			},
 			"allocations": schema.ListNestedAttribute{
@@ -211,6 +221,7 @@ func (r *nodeResource) Create(ctx context.Context, req resource.CreateRequest, r
 	partialNode := pterodactyl.PartialNode{
 		Name:               plan.Name.ValueString(),
 		Description:        plan.Description.ValueString(),
+		ContainerText:      plan.ContainerText.ValueString(),
 		Public:             plan.Public.ValueBool(),
 		BehindProxy:        plan.BehindProxy.ValueBool(),
 		MaintenanceMode:    plan.MaintenanceMode.ValueBool(),
@@ -223,6 +234,7 @@ func (r *nodeResource) Create(ctx context.Context, req resource.CreateRequest, r
 		DiskOverallocate:   plan.DiskOverallocate.ValueInt32(),
 		UploadSize:         plan.UploadSize.ValueInt32(),
 		DaemonListen:       plan.DaemonListen.ValueInt32(),
+		DaemonText:         plan.DaemonText.ValueString(),
 		DaemonSFTP:         plan.DaemonSFTP.ValueInt32(),
 	}
 
@@ -268,6 +280,7 @@ func (r *nodeResource) Create(ctx context.Context, req resource.CreateRequest, r
 	plan.UUID = types.StringValue(node.UUID)
 	plan.Name = types.StringValue(node.Name)
 	plan.Description = types.StringValue(node.Description)
+	plan.ContainerText = types.StringValue(node.ContainerText)
 	plan.Public = types.BoolValue(node.Public)
 	plan.BehindProxy = types.BoolValue(node.BehindProxy)
 	plan.MaintenanceMode = types.BoolValue(node.MaintenanceMode)
@@ -281,6 +294,7 @@ func (r *nodeResource) Create(ctx context.Context, req resource.CreateRequest, r
 	plan.UploadSize = types.Int32Value(node.UploadSize)
 	plan.DaemonSFTP = types.Int32Value(node.DaemonSFTP)
 	plan.DaemonListen = types.Int32Value(node.DaemonListen)
+	plan.DaemonText = types.StringValue(node.DaemonText)
 	plan.DaemonBase = types.StringValue(node.DaemonBase)
 	plan.CreatedAt = types.StringValue(node.CreatedAt.Format(time.RFC3339))
 	plan.UpdatedAt = types.StringValue(node.UpdatedAt.Format(time.RFC3339))
@@ -339,6 +353,7 @@ func (r *nodeResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	state.Name = types.StringValue(node.Name)
 	state.UUID = types.StringValue(node.UUID)
 	state.Description = types.StringValue(node.Description)
+	state.ContainerText = types.StringValue(node.ContainerText)
 	state.Public = types.BoolValue(node.Public)
 	state.BehindProxy = types.BoolValue(node.BehindProxy)
 	state.MaintenanceMode = types.BoolValue(node.MaintenanceMode)
@@ -352,6 +367,7 @@ func (r *nodeResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	state.UploadSize = types.Int32Value(node.UploadSize)
 	state.DaemonSFTP = types.Int32Value(node.DaemonSFTP)
 	state.DaemonListen = types.Int32Value(node.DaemonListen)
+	state.DaemonText = types.StringValue(node.DaemonText)
 	state.DaemonBase = types.StringValue(node.DaemonBase)
 	state.CreatedAt = types.StringValue(node.CreatedAt.Format(time.RFC3339))
 	state.UpdatedAt = types.StringValue(node.UpdatedAt.Format(time.RFC3339))
@@ -390,6 +406,7 @@ func (r *nodeResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	partialNode := pterodactyl.PartialNode{
 		Name:               plan.Name.ValueString(),
 		Description:        plan.Description.ValueString(),
+		ContainerText:      plan.ContainerText.ValueString(),
 		Public:             plan.Public.ValueBool(),
 		BehindProxy:        plan.BehindProxy.ValueBool(),
 		MaintenanceMode:    plan.MaintenanceMode.ValueBool(),
@@ -403,6 +420,7 @@ func (r *nodeResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		UploadSize:         plan.UploadSize.ValueInt32(),
 		DaemonSFTP:         plan.DaemonSFTP.ValueInt32(),
 		DaemonListen:       plan.DaemonListen.ValueInt32(),
+		DaemonText:         plan.DaemonText.ValueString(),
 	}
 
 	// Update existing node
@@ -479,6 +497,7 @@ func (r *nodeResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	plan.Name = types.StringValue(node.Name)
 	plan.UUID = types.StringValue(node.UUID)
 	plan.Description = types.StringValue(node.Description)
+	plan.ContainerText = types.StringValue(node.ContainerText)
 	plan.Public = types.BoolValue(node.Public)
 	plan.BehindProxy = types.BoolValue(node.BehindProxy)
 	plan.MaintenanceMode = types.BoolValue(node.MaintenanceMode)
@@ -492,6 +511,7 @@ func (r *nodeResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	plan.UploadSize = types.Int32Value(node.UploadSize)
 	plan.DaemonSFTP = types.Int32Value(node.DaemonSFTP)
 	plan.DaemonListen = types.Int32Value(node.DaemonListen)
+	plan.DaemonText = types.StringValue(node.DaemonText)
 	plan.DaemonBase = types.StringValue(node.DaemonBase)
 	plan.CreatedAt = types.StringValue(node.CreatedAt.Format(time.RFC3339))
 	plan.UpdatedAt = types.StringValue(node.UpdatedAt.Format(time.RFC3339))
@@ -577,6 +597,7 @@ func (r *nodeResource) ImportState(ctx context.Context, req resource.ImportState
 		UUID:               types.StringValue(node.UUID),
 		Name:               types.StringValue(node.Name),
 		Description:        types.StringValue(node.Description),
+		ContainerText:      types.StringValue(node.ContainerText),
 		Public:             types.BoolValue(node.Public),
 		BehindProxy:        types.BoolValue(node.BehindProxy),
 		MaintenanceMode:    types.BoolValue(node.MaintenanceMode),
@@ -590,6 +611,7 @@ func (r *nodeResource) ImportState(ctx context.Context, req resource.ImportState
 		UploadSize:         types.Int32Value(node.UploadSize),
 		DaemonSFTP:         types.Int32Value(node.DaemonSFTP),
 		DaemonListen:       types.Int32Value(node.DaemonListen),
+		DaemonText:         types.StringValue(node.DaemonText),
 		DaemonBase:         types.StringValue(node.DaemonBase),
 		CreatedAt:          types.StringValue(node.CreatedAt.Format(time.RFC3339)),
 		UpdatedAt:          types.StringValue(node.UpdatedAt.Format(time.RFC3339)),

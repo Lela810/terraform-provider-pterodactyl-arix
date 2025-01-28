@@ -42,6 +42,7 @@ type Node struct {
 	Public             types.Bool   `tfsdk:"public"`
 	Name               types.String `tfsdk:"name"`
 	Description        types.String `tfsdk:"description"`
+	ContainerText      types.String `tfsdk:"container_text"`
 	LocationID         types.Int32  `tfsdk:"location_id"`
 	FQDN               types.String `tfsdk:"fqdn"`
 	Scheme             types.String `tfsdk:"scheme"`
@@ -53,6 +54,7 @@ type Node struct {
 	DiskOverallocate   types.Int32  `tfsdk:"disk_overallocate"`
 	UploadSize         types.Int32  `tfsdk:"upload_size"`
 	DaemonListen       types.Int32  `tfsdk:"daemon_listen"`
+	DaemonText         types.String `tfsdk:"daemon_text"`
 	DaemonSFTP         types.Int32  `tfsdk:"daemon_sftp"`
 	DaemonBase         types.String `tfsdk:"daemon_base"`
 	CreatedAt          types.String `tfsdk:"created_at"`
@@ -101,6 +103,10 @@ func (d *nodesDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 							Description: "The description of the node.",
 							Computed:    true,
 						},
+						"container_text": schema.StringAttribute{
+							Description: "The name of the container inside the console.",
+							Computed:    true,
+						},
 						"location_id": schema.Int32Attribute{
 							Description: "The location ID of the node.",
 							Computed:    true,
@@ -143,6 +149,10 @@ func (d *nodesDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						"daemon_listen": schema.Int32Attribute{
 							Description: "The daemon listen of the node.",
+							Computed:    true,
+						},
+						"daemon_text": schema.StringAttribute{
+							Description: "The name of the daemon inside the console.",
 							Computed:    true,
 						},
 						"daemon_sftp": schema.Int32Attribute{
@@ -199,6 +209,7 @@ func (d *nodesDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 			Public:             types.BoolValue(node.Public),
 			Name:               types.StringValue(node.Name),
 			Description:        types.StringValue(node.Description),
+			ContainerText:      types.StringValue(node.ContainerText),
 			LocationID:         types.Int32Value(node.LocationID),
 			FQDN:               types.StringValue(node.FQDN),
 			Scheme:             types.StringValue(node.Scheme),
@@ -210,6 +221,7 @@ func (d *nodesDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 			DiskOverallocate:   types.Int32Value(node.DiskOverallocate),
 			UploadSize:         types.Int32Value(node.UploadSize),
 			DaemonListen:       types.Int32Value(node.DaemonListen),
+			DaemonText:         types.StringValue(node.DaemonText),
 			DaemonSFTP:         types.Int32Value(node.DaemonSFTP),
 			DaemonBase:         types.StringValue(node.DaemonBase),
 			CreatedAt:          types.StringValue(node.CreatedAt.Format(time.RFC3339)),
