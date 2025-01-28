@@ -4,7 +4,7 @@ import (
 	"context"
 	"os"
 
-	"github.com/Luiggi33/pterodactyl-client-go"
+	"github.com/Lela810/pterodactyl-client-go"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/provider"

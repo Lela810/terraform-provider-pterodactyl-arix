@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Luiggi33/pterodactyl-client-go"
+	"github.com/Lela810/pterodactyl-client-go"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int32planmodifier"

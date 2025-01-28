@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Luiggi33/pterodactyl-client-go"
+	"github.com/Lela810/pterodactyl-client-go"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
